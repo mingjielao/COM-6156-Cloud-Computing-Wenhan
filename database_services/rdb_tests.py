@@ -4,7 +4,7 @@ from database_services.RDBService import RDBService
 def t1():
 
     res = RDBService.get_by_prefix(
-        "imdbfixed", "names_basic_recent", "primaryName", "Tom H"
+        "IMDBFixed", "names_basic_recent", "primaryName", "Tom H"
     )
     print("t1 resule = ", res)
 
@@ -12,7 +12,7 @@ def t1():
 def t2():
 
     res = RDBService.find_by_template(
-        "imdbfixed", "names_basic_recent", {"primaryName": "Tom Hanks"}, None
+        "IMDBFixed", "names_basic_recent", {"primaryName": "Tom Hanks"}, None
     )
     print("t2 resuls = ", res)
 
@@ -20,7 +20,7 @@ def t2():
 def t3():
 
     res = RDBService.create(
-        "aaaaf21", "addresses",
+        "IMDBFixed", "addresses",
             {
                 "address1": "520 w 120th St",
                 "city": "New York",
@@ -32,7 +32,7 @@ def t3():
 def t4():
 
     res = RDBService.create(
-        "aaaaaF21E6156", "users",
+        "IMDBFixed", "users",
             {
                 "name": "Jesse",
                 "age": 25,
@@ -42,12 +42,12 @@ def t4():
 def t5():
 
     res = RDBService.find_by_template(
-        "aaaaaF21E6156", "users", {"Name": "Jesse"}, None
+        "IMDBFixed", "users", {"Name": "Jesse"}, None
     )
     print("t5 resuls = ", res)
-#t2()
+t2()
 # t3()
 # t4()
 # t2()
-t5()
+# t5()
 

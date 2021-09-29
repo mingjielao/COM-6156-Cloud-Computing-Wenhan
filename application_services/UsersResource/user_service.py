@@ -13,10 +13,10 @@ class UserResource(BaseRDBApplicationResource):
 
     @classmethod
     def get_data_resource_info(cls):
-        return 'aaaaaF21E6156', 'users'
+        return 'IMDBFixed', 'users'
 
     @classmethod
     def get_by_name_prefix(cls, name_prefix):
-        res = RDBService.get_by_prefix("aaaaaF21E6156", "users",
+        res = RDBService.get_by_prefix("IMDBFixed", "users",
                                       "name", name_prefix)
         return res
