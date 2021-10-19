@@ -25,7 +25,7 @@ class RDBService:
         db_info = context.get_db_info()
 
         db_connection = pymysql.connect(
-           **db_info,
+            **db_info,
             autocommit=True
         )
         return db_connection
@@ -53,7 +53,7 @@ class RDBService:
         cur = conn.cursor()
 
         sql = "select * from " + db_schema + "." + table_name + " where " + \
-            column_name + " like " + "'" + value_prefix + "%'"
+              column_name + " like " + "'" + value_prefix + "%'"
         print("SQL Statement = " + cur.mogrify(sql, None))
 
         res = cur.execute(sql)
@@ -64,8 +64,67 @@ class RDBService:
         return res
 
     @classmethod
-    def get_where_clause_args(cls, template):
+    def get_by_attribute(cls, db_schema, table_name, column_name, attribute):
+        conn = RDBService._get_db_connection()
+        cur = conn.cursor()
 
+        sql = "select * from " + db_schema + "." + table_name + " where " + \
+              column_name + " = " + "'" + attribute + "'"
+
+        res = cur.execute(sql)
+        res = cur.fetchall()
+        conn.close()
+
+        return res
+
+    @classmethod
+    def delete_by_attribute(cls, db_schema, table_name, column_name, attribute):
+        conn = RDBService._get_db_connection()
+        cur = conn.cursor()
+
+        sql = "delete from " + db_schema + "." + table_name + " where " + \
+              column_name + " = " + "'" + attribute + "'"
+
+        res = cur.execute(sql)
+        conn.commit()
+        conn.close()
+
+        return res
+
+    @classmethod
+    def put(cls, db_schema, table_name, put_data, group_id):
+        conn = RDBService._get_db_connection()
+        cur = conn.cursor()
+
+        for col, content in put_data.items():
+            sql = "UPDATE " + db_schema + "." + table_name + " SET " + col + " = '"\
+                       + content + "' WHERE group_id = " + group_id
+            print(sql)
+            res = cur.execute(sql)
+            conn.commit()
+
+        return res
+
+
+
+
+    @classmethod
+    def get_largest_id(cls, db_schema, table_name, id):
+        conn = RDBService._get_db_connection()
+        cur = conn.cursor()
+
+        sql = "select max(" + id + ") as id from " + db_schema + "." + table_name
+
+        res = cur.execute(sql)
+        res = cur.fetchall()
+        res = res[0]["id"] + 1
+        conn.close()
+        print(res)
+
+        return res
+
+    @classmethod
+    def get_where_clause_args(cls, template):
         terms = []
         args = []
         clause = None
@@ -74,24 +133,25 @@ class RDBService:
             clause = ""
             args = None
         else:
-            for k,v in template.items():
+            for k, v in template.items():
                 terms.append(k + "=%s")
                 args.append(v)
 
-            clause = " where " +  " AND ".join(terms)
-
+            clause = " where " + " AND ".join(terms)
 
         return clause, args
 
     @classmethod
-    def find_by_template(cls, db_schema, table_name, template, field_list):
+    def find_by_template(cls, db_schema, table_name, template, limit, offset, field_list):
 
-        wc,args = RDBService.get_where_clause_args(template)
+        wc, args = RDBService.get_where_clause_args(template)
 
         conn = RDBService._get_db_connection()
         cur = conn.cursor()
 
-        sql = "select * from " + db_schema + "." + table_name + " " + wc
+        sql = "select * from " + db_schema + "." + table_name + " " + " limit " + limit + " offset " \
+              + offset + " " + wc
+        print(sql)
         res = cur.execute(sql, args=args)
         res = cur.fetchall()
 
@@ -106,7 +166,7 @@ class RDBService:
         vals = []
         args = []
 
-        for k,v in create_data.items():
+        for k, v in create_data.items():
             cols.append(k)
             vals.append('%s')
             args.append(v)
@@ -115,7 +175,7 @@ class RDBService:
         vals_clause = "values (" + ",".join(vals) + ")"
 
         sql_stmt = "insert into " + db_schema + "." + table_name + " " + cols_clause + \
-            " " + vals_clause
+                   " " + vals_clause
 
         res = RDBService.run_sql(sql_stmt, args)
         return res
