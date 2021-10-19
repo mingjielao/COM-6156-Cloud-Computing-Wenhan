@@ -2,4 +2,4 @@
 For HW0 of clouding computing.
 
 ## Link to Google docs
-https://docs.google.com/document/d/1fd5dSAYdA-RSuBaIbckkXIpWuy3Ti3aVoH0vF6aqmpE/edit#heading=h.vr3eociokxwv
+https://docs.google.com/document/d/17LKIh5Ecmw5XOZB0pJH7IGsF0G7-doNPYUvbqumsbPg/edit#heading=h.m75w18akw6wu
