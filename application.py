@@ -10,16 +10,16 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-app = Flask(__name__)
-CORS(app)
+application = Flask(__name__)
+CORS(application)
 
 
-@app.route('/')
+@application.route('/')
 def hello_world():
     return '<u>Hello World!</u>'
 
 
-@app.route('/groups', methods=['GET', 'POST'])
+@application.route('/groups', methods=['GET', 'POST'])
 def get_or_insert_group():
     if request.method == 'POST':
         create_data = request.get_json()
@@ -31,7 +31,7 @@ def get_or_insert_group():
         rsp = Response(json.dumps(res), status=200, content_type="application/json")
     return rsp
 
-@app.route('/groups/<group_id>', methods=['GET', 'PUT', 'DELETE'])
+@application.route('/groups/<group_id>', methods=['GET', 'PUT', 'DELETE'])
 def handle_group_by_id(group_id):
     if request.method == 'GET':
         res = GroupResource.get_by_id(group_id)
@@ -48,4 +48,4 @@ def handle_group_by_id(group_id):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    application.run(host="0.0.0.0", port=5000)
