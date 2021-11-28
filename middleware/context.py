@@ -19,14 +19,12 @@ def get_db_info():
             "host": db_host,
             "user": db_user,
             "password": db_password,
-            "cursorclass": pymysql.cursors.DictCursor
         }
     else:
         db_info = {
             "host": "database.cgylrekh9kqs.us-east-2.rds.amazonaws.com",
             "user": "admin",
             "password": "dbusercool",
-            "cursorclass": pymysql.cursors.DictCursor
         }
 
     return db_info
