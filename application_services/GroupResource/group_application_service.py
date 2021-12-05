@@ -28,4 +28,8 @@ class GroupResource(BaseApplicationResource):
         new_resource_info["group_id"] = next_id
         res = super().create(new_resource_info)
 
+        if res == 1:
+            res = {}
+            res["location"] = "/api/group/" + str(next_id)
+
         return res
