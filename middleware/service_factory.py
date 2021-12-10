@@ -14,12 +14,12 @@ class ServiceFactory:
 
         group_svc_config_info = {
             "db_resource": r_svc,
-            "db_table_name": "group",
+            "db_table_name": "sharegroup",
             "key_columns": ["group_id"]
         }
         group_svc = GroupResource(group_svc_config_info)
 
-        self.services["group"] = group_svc
+        self.services["sharegroup"] = group_svc
 
     def get_service(self, service_name):
         result = self.services.get(service_name, None)
