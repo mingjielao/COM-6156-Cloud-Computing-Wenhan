@@ -19,12 +19,14 @@ def get_db_info():
             "host": db_host,
             "user": db_user,
             "password": db_password,
+            "db": "YYDS"
         }
     else:
         db_info = {
             "host": "database.cgylrekh9kqs.us-east-2.rds.amazonaws.com",
             "user": "admin",
             "password": "dbusercool",
+            "db": "YYDS"
         }
 
     return db_info
