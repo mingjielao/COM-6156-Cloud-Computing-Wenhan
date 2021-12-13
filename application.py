@@ -8,12 +8,22 @@ from middleware.service_factory import ServiceFactory
 from flask_dance.contrib.google import make_google_blueprint, google
 import middleware.security as security
 
+from dynamodb import dynamodb as db
+
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 application = Flask(__name__)
 CORS(application)
+
+class SetEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, set):
+            return list(obj)
+        else:
+            return json.JSONEncoder.default(self, obj)
+
 
 
 @application.route('/')
@@ -66,6 +76,55 @@ def handle_group_by_id(resource_collection, resource_id):
         res = svc.delete_by_resource_id(resource_id)
         rsp = Response(json.dumps(res, default=str), status=204, content_type="application/json")
     return rsp
+
+# Return a list of user_id
+@application.route('/getUsers/<group_id>', methods=['GET'])
+def getUsers(group_id):
+    res = db.get_attribute_set("Group-User", "group_id", "user_id", group_id)
+    rsp = Response(json.dumps(res, cls=SetEncoder), status=200, content_type="application/json")
+
+    return rsp
+
+
+@application.route('/addUser/<group_id>/<user_id>', methods=['POST'])
+def addUser(group_id, user_id):
+    res = db.add_relation("Group-User", "group_id", "user_id", group_id, user_id)
+    rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
+
+    return rsp
+
+
+@application.route('/removeUser/<group_id>/<user_id>', methods=['DELETE'])
+def removeUser(group_id, user_id):
+    res = db.remove_relation("Group-User", "group_id", "user_id", group_id, user_id)
+    rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
+    return rsp
+
+
+@application.route('/getEvents/<group_id>', methods=['GET'])
+def getEvents(group_id):
+    res = db.get_attribute_set("Group-Event", "group_id", "event_id", group_id)
+    rsp = Response(json.dumps(res, cls=SetEncoder), status=200, content_type="application/json")
+
+    return rsp
+
+
+@application.route('/addEvent/<group_id>/<event_id>', methods=['POST'])
+def addEvent(group_id, event_id):
+    res = db.add_relation("Group-Event", "group_id", "event_id", group_id, event_id)
+    rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
+
+    return rsp
+
+
+@application.route('/removeEvent/<group_id>/<event_id>', methods=['DELETE'])
+def removeEvent(group_id, event_id):
+    res = db.remove_relation("Group-Event", "group_id", "event_id", group_id, event_id)
+    rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
+    return rsp
+
+
+
 
 
 if __name__ == '__main__':
